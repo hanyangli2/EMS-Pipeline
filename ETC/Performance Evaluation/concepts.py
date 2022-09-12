@@ -66,6 +66,8 @@ def get_results_concepts(path):
             if len(case_list):
                 # print(case_list)
                 results.append(case_list)
+
+    print(results)
     return results
 
 
@@ -107,8 +109,8 @@ def process_tf(concepts):
 
 
 def main2():
-    path_results = "C:/Users/Student/OneDrive/Documents/Summer 2019 Research/Week 3-Testing/extracted.txt"
-    path_truth = "C:/Users/Student/OneDrive/Documents/Summer 2019 Research/Week 3-Testing/concepts.txt"
+    path_results = "/home/harry/Downloads/EMS-Pipeline/ETC/Performance Evaluation/extract2.txt"
+    path_truth = "/home/harry/Downloads/EMS-Pipeline/ETC/Performance Evaluation/concepts.txt"
 
     # Get results
     results = get_results_concepts(path_results)

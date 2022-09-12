@@ -8,6 +8,11 @@ import re
 from nltk import ngrams
 from nltk.tokenize import sent_tokenize
 import csv
+from negation_negspacy import *
+from negation_negspacy2 import *
+from negation_pycontext import *
+
+neg_dict = {}
 
 
 def get_bp(scores, text):
@@ -103,7 +108,8 @@ class ConceptExtractor(object):
         self.pattern: pattern of the requied value
         '''
         extended_concept_list = pd.read_csv(
-            List_route, na_filter=False)  # adding in na_filter helps with all the blanks columns and gives them "" value
+            List_route,
+            na_filter=False)  # adding in na_filter helps with all the blanks columns and gives them "" value
         self.seeds = list()
         self.CUIs = [item for item in extended_concept_list['CUI']]
         self.CUI2Concept = defaultdict(list)
@@ -119,8 +125,8 @@ class ConceptExtractor(object):
         self.R_range = 30
         self.pattern = "-?\d+\.\d+|-?\d+"
         self.Log = list()
-        #self.ex_extend_cons = []
-        #self.raw_ex_cons = []
+        # self.ex_extend_cons = []
+        # self.raw_ex_cons = []
 
     def StatusInit(self):
         '''
@@ -147,6 +153,20 @@ class ConceptExtractor(object):
         '''
         sent_text: a list of sent text
         '''
+
+        print("sent_text")
+        print(sent_text)
+
+        print("negation")
+        tags = pycontext_findneg(sent_text[0])
+        i = 0;
+        #Searches for negated values in sent_text
+        for x in tags:
+            category = re.sub(r'[^a-zA-Z]', '', str(tags[i][1].getCategory()))
+            neg_dict[str(category)] = negated(tags)
+            i += 1
+        print(neg_dict)
+
         mm = MetaMap.get_instance('./public_mm/bin/metamap16', version=2016)
         self.concepts, _ = mm.extract_concepts(sent_text, word_sense_disambiguation=True,
                                                ignore_stop_phrases=True)
@@ -190,7 +210,7 @@ class ConceptExtractor(object):
         '''
         pool = set(['Pulse', 'Resp', 'BP', 'GCS',
                     'Glucose', 'SPO2', 'Pain', 'EKG'])
-        #self.Status = dict()
+        # self.Status = dict()
         self.vtLog = dict()
         for item in pool:
             self.vtLog[item] = []
@@ -216,25 +236,37 @@ class ConceptExtractor(object):
                 self.vtLog[item[0]].append(item[1])
             self.Status[item[0]].score = 1000.
             self.Status[item[0]].tick = 1
-            content = '('+self.Status[item[0]].name+';'+str(self.Status[item[0]].binary)+';' +\
-                str(self.Status[item[0]].value)+';'+self.Status[item[0]].content+';' +\
-                str(self.Status[item[0]].score)+';' + \
-                str(self.Status[item[0]].tick)+')'
+            content = '(' + self.Status[item[0]].name + ';' + str(self.Status[item[0]].binary) + ';' + \
+                      str(self.Status[item[0]].value) + ';' + self.Status[item[0]].content + ';' + \
+                      str(self.Status[item[0]].score) + ';' + \
+                      str(self.Status[item[0]].tick) + ')'
             self.Log.append(content)
 
     def FirstExtract(self, sent_text, tick_num):
+
+        print("First Extract Sent Text")
+        print(sent_text)
+
         for concept in self.concepts:
+            negation = True
             if concept[1] == 'AA':
                 continue
-            print(concept)
+
             normalized_trigger_name = concept[6].split(
                 '-')[3].strip('"').lower()
             # last part of "trigger" field, 1 means negation is detected
             # negation = False if negation is detected
-            negation = concept[6].split('-')[-1].rstrip(']') == '0'
+            # negation = concept[6].split('-')[-1].rstrip(']') == '0'
+            print(normalized_trigger_name)
+            print("detecting negation!!!!!")
+            if neg_dict.get(normalized_trigger_name) is not None and neg_dict[normalized_trigger_name] == False:
+                negation = False
+            print("negation: ")
+            print(negation)
+
             CUI = concept[4]
             print("Concept: " + normalized_trigger_name + " CUI: " + CUI)
-            #score = float(concept[2])
+            # score = float(concept[2])
             score = float(self.scores[CUI])
             # print(concept[8])
             posi_info = concept[8].replace(';', ',').strip('[]').split('],[')
@@ -250,13 +282,13 @@ class ConceptExtractor(object):
                         position = [item.strip('[]') for item in position]
                     beginPt = int(position[0])
                     length = int(position[1])
-                    if beginPt+length+self.R_range > len(sent_text[0]):
+                    if beginPt + length + self.R_range > len(sent_text[0]):
                         latter_strPiece = sent_text[0][beginPt +
                                                        length:len(sent_text[0])]
                     else:
                         latter_strPiece = sent_text[0][beginPt +
-                                                       length:beginPt+length+self.R_range]
-                    if beginPt-self.R_range < 0:
+                                                       length:beginPt + length + self.R_range]
+                    if beginPt - self.R_range < 0:
                         former_strPiece = sent_text[0][0:beginPt]
                     else:
                         former_strPiece = sent_text[0][beginPt -
@@ -281,7 +313,7 @@ class ConceptExtractor(object):
                                 if mapped_concept == 'bp':
                                     if len(value) >= 2:
                                         self.Status[mapped_concept].value = (
-                                            value[0]+'/'+value[1])
+                                                value[0] + '/' + value[1])
                                     else:
                                         self.Status[mapped_concept].value = (
                                             value[0])
@@ -290,19 +322,21 @@ class ConceptExtractor(object):
                             else:
                                 self.Status[mapped_concept].value = normalized_trigger_name
                             # make log
-                            content = '('+self.Status[mapped_concept].name+';'+str(self.Status[mapped_concept].binary)+';' +\
-                                str(self.Status[mapped_concept].value)+';'+self.Status[mapped_concept].content+';' +\
-                                str(self.Status[mapped_concept].score)+';' + \
-                                str(self.Status[mapped_concept].tick)+')'
+                            content = '(' + self.Status[mapped_concept].name + ';' + str(
+                                self.Status[mapped_concept].binary) + ';' + \
+                                      str(self.Status[mapped_concept].value) + ';' + self.Status[
+                                          mapped_concept].content + ';' + \
+                                      str(self.Status[mapped_concept].score) + ';' + \
+                                      str(self.Status[mapped_concept].tick) + ')'
                             self.Log.append(content)
 
     def DisplayStatus(self):
         for item in self.Status:
             if len(self.Status[item].content) > 0:
-                content = '('+self.Status[item].name+';'+str(self.Status[item].binary)+';' +\
-                    str(self.Status[item].value)+';'+self.Status[item].content+';' +\
-                    str(self.Status[item].score)+';' + \
-                    str(self.Status[item].tick)+')'
+                content = '(' + self.Status[item].name + ';' + str(self.Status[item].binary) + ';' + \
+                          str(self.Status[item].value) + ';' + self.Status[item].content + ';' + \
+                          str(self.Status[item].score) + ';' + \
+                          str(self.Status[item].tick) + ')'
                 print(content)
 
 
@@ -487,7 +521,7 @@ class CEWithoutMM(object):
                 if sent.find(key) >= 0:
                     # check neg results, if term is included, set neg as False, else True
                     neg = not (self.neg_res[case_num][sent] and (
-                        ''.join(self.neg_res[case_num][sent]).find(key) >= 0))
+                            ''.join(self.neg_res[case_num][sent]).find(key) >= 0))
                     for j in self.SS_mapping[key]:
                         if not self.WDistance:
                             if j in self.Status:
@@ -498,22 +532,23 @@ class CEWithoutMM(object):
                                 self.Status[j].tick = tick_num
                         else:
                             if j[1] in self.Status:
-                              #  print j[1], neg
+                                #  print j[1], neg
                                 self.Status[j[1]].binary = neg
-                               # print self.Status[j[1]].binary
+                                # print self.Status[j[1]].binary
                                 self.Status[j[1]].score = j[0] * 1000.
                                 self.Status[j[1]].content = key
                                 self.Status[j[1]].value = key
                                 self.Status[j[1]].tick = tick_num
-                               # print self.Status[j[1]].binary
-      #  print "------------------CE----------------------"
+                            # print self.Status[j[1]].binary
+
+    #  print "------------------CE----------------------"
 
     def DisplayStatus(self):
         for item in self.Status:
             if len(self.Status[item].content) > 0:
-                content = '('+self.Status[item].name+';'+str(self.Status[item].binary)+';' +\
-                    str(self.Status[item].value)+';'+self.Status[item].content+';' +\
-                    str(self.Status[item].score)+';' + \
-                    str(self.Status[item].tick)+')'
+                content = '(' + self.Status[item].name + ';' + str(self.Status[item].binary) + ';' + \
+                          str(self.Status[item].value) + ';' + self.Status[item].content + ';' + \
+                          str(self.Status[item].score) + ';' + \
+                          str(self.Status[item].tick) + ')'
                 print(content)
         print("------------------------------------------------")

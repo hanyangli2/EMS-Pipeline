@@ -1,0 +1,3 @@
+Report No.	Concept	Sentence	Negation
+1	asthma	the patient denied having asthma.	Negated
+2	chest pain	the patient is chest pain free.	Negated

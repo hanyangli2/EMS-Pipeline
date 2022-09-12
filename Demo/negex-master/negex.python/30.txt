@@ -1,0 +1,34 @@
+Report No.	Concept	Sentence	Negated or Affirmed
+1	Sick	D- Dispatched to residence for Sick Person.	Affirmed
+2	MEDICAL_PHRASE	CAD notes advise 45 year old female with injury to her hand.	Affirmed/Negated*****
+3	MEDICAL_PHRASE	Additional notes advise female reports arms feels worse after her Stroke.	Affirmed
+4	MEDICAL_PHRASE	Nature of Call changed to Stroke.	Affirmed/Negated*****
+5	MEDICAL_PHRASE	A- Arrived to residence and observed an open door with an adult female sitting on the bottom steps leading up to the second floor apartment.	Affirmed/Negated*****
+6	MEDICAL_PHRASE	Female is alert, oriented, and identified herself as the pt.	Affirmed/Negated*****
+7	MEDICAL_PHRASE	Pt is not tachypneic and is able to speak in complete sentences.	Affirmed/Negated*****
+8	MEDICAL_PHRASE	Pt does not appear to have any obvious deficits and is using both arms and hands equally.	Affirmed/Negated*****
+9	MEDICAL_PHRASE	Pt does appear anxious and is tearful.	Affirmed/Negated*****
+10	MEDICAL_PHRASE	C- Right Arm Numbness/Weakness H- Pt reports she had a stroke 1 week ago and was seen and treated at St.  Mary's Hospital.	Affirmed/Negated*****
+11	MEDICAL_PHRASE	Pt reports she was recently released and last night began having increased numbness in her right arm.	Affirmed/Negated*****
+12	MEDICAL_PHRASE	Pt reports her right arm was weak from her previous stroke but now she feels like she can not use it.	Affirmed/Negated*****
+13	headache	Pt denies headache.	Negated
+14	MEDICAL_PHRASE	Pt denies any other complaints or other deficits.	Affirmed/Negated*****
+15	falls or injuries	Pt denies any recent falls or injuries.	Negated
+16	MEDICAL_PHRASE	Pt reports she takes Plavix and ASA.	Affirmed/Negated*****
+17	MEDICAL_PHRASE	Pt reports taking several other medications but can not recall the names.	Affirmed/Negated*****
+18	MEDICAL_PHRASE	Pt reports allergies to Ampicillin, Penicillin, Sulfa, IV contrast dye, and Seafood.	Affirmed/Negated*****
+19	MEDICAL_PHRASE	A- A&Ox4, GCS=15, Anxious/Tearful but easily Calmed, Pt is Cooperative, A- patent, B- normal rate and depth, C- radial pulses present, Skin- warm/pink/dry, D- none, HEENT- PERRL 4mm bilat.	Affirmed/Negated*****
+20	MEDICAL_PHRASE	, no drainage eyes/ears/nose, no jvd or tracheal deviation, Chest- symmetrical, BS clear and equal bilat.	Affirmed/Negated*****
+21	MEDICAL_PHRASE	, pt denies CP, pt denies SOB, ABD- soft, non-tender, pt denies pain, pt denies nausea, GU- continent, Extremities- PMSx4, ROMx4, no edema or trauma observed, VITAL SIGNS- HR 78 RR 20 B/P 148/86 SpO2 98% and Blood Sugar 115mg/dL R- Pt was placed on Cardiac Monitor due to reported Stroke Symptom.	Affirmed
+22	MEDICAL_PHRASE	Pt was observed to have a Sinus Rhythm with no ectopy.	Affirmed/Negated*****
+23	MEDICAL_PHRASE	IV was placed 1 attempt with success with 20GA Saline Lock to Left Forearm.	Affirmed/Negated*****
+24	MEDICAL_PHRASE	Hospital Contact was made to advise of ETA and pt condition.	Affirmed/Negated*****
+25	MEDICAL_PHRASE	T- Pt was able to ambulate to unit unassisted but was escorted for safety.	Affirmed/Negated*****
+26	MEDICAL_PHRASE	Pt transferred self to stretcher.	Affirmed/Negated*****
+27	MEDICAL_PHRASE	Pt was secured with straps x 5 and rails x 2.	Affirmed/Negated*****
+28	MEDICAL_PHRASE	Pt was transported to St.  Mary's Hospital per request.	Affirmed/Negated*****
+29	MEDICAL_PHRASE	Pt's condition remained unchanged.	Affirmed/Negated*****
+30	MEDICAL_PHRASE	Pt was taken to Triage as directed by ED Staff.	Affirmed/Negated*****
+31	MEDICAL_PHRASE	Report was given and pt care was transferred to ED/Triage Staff.	Affirmed/Negated*****
+32	MEDICAL_PHRASE	E- 1: Delay at destination for documentation, pt turnover, and crew use of facilities.	Affirmed/Negated*****
+33	MEDICAL_PHRASE	Christa Rector 3786	Affirmed/Negated*****

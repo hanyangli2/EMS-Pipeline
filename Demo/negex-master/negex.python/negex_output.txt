@@ -1,0 +1,3 @@
+Percentage correct:-1.0
+1-asthma-the patient denied having asthma.-Negated-the patient [PREN]denied[PREN] having [NEGATED]asthma[NEGATED].-negated-having [NEGATED]asthma[NEGATED].
+2-chest pain-the patient is chest pain free.-Negated-the patient is [NEGATED]chest pain[NEGATED] [POST]free[POST] .-negated-the patient is [NEGATED]chest_pain[NEGATED]
