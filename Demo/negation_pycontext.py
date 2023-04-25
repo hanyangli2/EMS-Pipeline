@@ -1,8 +1,6 @@
 import pyConTextNLP.pyConText as pyConText
 import pyConTextNLP.itemData as itemData
 import re
-import networkx as nx
-import os
 
 PYCONTEXTNLP_MODIFIERS = '/home/harry/Downloads/EMS-Pipeline/Demo/EMS-Pipeline-pycontextnlp-negation-detector/data/pycontextnlp_modifiers.yml'
 PYCONTEXTNLP_TARGETS = '/home/harry/Downloads/EMS-Pipeline/Demo/EMS-Pipeline-pycontextnlp-negation-detector/data/pycontextnlp_targets.yml'
@@ -26,10 +24,8 @@ def pycontext_findneg(sent_text):
     # for node in markup.nodes(data=True):
     #     print(node)
     markup.applyModifiers()
-
 #    for edge in markup.edges():
 #       print(edge)
-
     list = [];
     for edge in markup.edges():
         list.append(edge)

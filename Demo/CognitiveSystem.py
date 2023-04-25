@@ -5,14 +5,17 @@ import py_trees
 import behaviours_m as be
 from py_trees.blackboard import Blackboard
 from tqdm import tqdm as tqdm
+
 from classes import SpeechNLPItem, GUISignal
 import threading
 import text_clf_utils as utils
 from ranking_func import rank
+from csv_ConceptExtract import concept_num, get_concept_num
 from Form_Filling import textParse2
 from operator import itemgetter
 import subprocess
 import re
+import csv
 
 #added 3/18
 import nltk
@@ -125,7 +128,9 @@ def CognitiveSystem(Window, SpeechToNLPQueue):
 
 # Function to return this recent tick's results
 def TickResults(Window, NLP_Items):
-    print(NLP_Items)
+    # Number of empty rows to add to the CSV file
+
+    # print(NLP_Items)
     ConceptExtractionSignal = GUISignal()
     ConceptExtractionSignal.signal.connect(Window.UpdateConceptExtractionBox)
 
@@ -158,12 +163,12 @@ def TickResults(Window, NLP_Items):
 
     # ======= Signs, symptoms, and vitals
     print("\n======= Signs, symptoms, and vitals:")
-
     for item in blackboard.Vitals:
         if len(blackboard.Vitals[item].content) > 0:
             content = (str(blackboard.Vitals[item].name).capitalize(), str(blackboard.Vitals[item].binary),
                        str(blackboard.Vitals[item].value), str(blackboard.Vitals[item].content),
                        str(round(blackboard.Vitals[item].score/1000, 2)), blackboard.Vitals[item].tick)
+            print("content")
             print(content)
             signs_and_vitals.append(content)
             if(content not in NLP_Items):
@@ -181,6 +186,18 @@ def TickResults(Window, NLP_Items):
 
     # Sort by Tick
     signs_and_vitals = sorted(signs_and_vitals, key=itemgetter(5))
+    #
+    # # Read the CSV file into a list of rows
+    # with open('csv_concepts.csv', 'r') as file:
+    #     rows = list(csv.reader(file))
+    # # Modify the value of the cell (row 2, column 3)
+    # print("concept_num: ")
+    # print(get_concept_num())
+    # rows[get_concept_num()] = signs_and_vitals
+    # # Write the modified list of rows back to the CSV file
+    # with open('csv_concepts.csv', 'w', newline='') as file:
+    #     writer = csv.writer(file)
+    #     writer.writerows(rows)
 
     # ======= Suggestions
     print("\n======= Suggestions:")
@@ -220,8 +237,6 @@ def TickResults(Window, NLP_Items):
     return protocol_candidates, signs_and_vitals, suggestions
 
 # Extract concept and calculate similarity
-
-
 def pre_tick_handler(behaviour_tree):
     #blackboard = Blackboard()
     global blackboard

@@ -46,6 +46,7 @@ import DeepSpeechMicStream
 import DeepSpeechFileStream
 import TextSpeechStream
 import CognitiveSystem
+import csv_ConceptExtract
 
 import csv
 chunkdata = []
@@ -245,7 +246,8 @@ class MainWindow(QWidget):
                                 "011_190105",
                                 "NG1",
                                 "Other Audio File",
-                                "Text File"])
+                                "Text File",
+                                "csv File"])
 
         self.ControlPanelGridLayout.addWidget(self.ComboBox, 0, 0, 1, 1)
 
@@ -489,6 +491,25 @@ class MainWindow(QWidget):
                 self, 'Open file', 'c:\\', "Text files (*.txt)")
             self.SpeechThread = StoppableThread(target=TextSpeechStream.TextSpeech, args=(
                 self, SpeechToNLPQueue, str(text_fname),))
+            self.SpeechThread.start()
+            print("Text File Speech Thread Started")
+
+        # If csv File
+        elif (self.ComboBox.currentText() == 'csv File'):
+            options = QFileDialog.Options()
+            options |= QFileDialog.ReadOnly
+            num_empty_rows = 100
+            # Open the CSV file for writing
+            with open('csv_concepts.csv', 'w', newline='') as file:
+                # Create a CSV writer object
+                writer = csv.writer(file)
+                # Write empty rows to the CSV file
+                for _ in range(num_empty_rows):
+                    writer.writerow([])
+            file_name, _ = QFileDialog.getOpenFileName(None, "Open File", "", "All Files (*);;Python Files (*.py)",
+                                                       options=options)
+            self.SpeechThread = StoppableThread(target=csv_ConceptExtract.TextSpeech, args=(
+                self, SpeechToNLPQueue, str(file_name),))
             self.SpeechThread.start()
             print("Text File Speech Thread Started")
 

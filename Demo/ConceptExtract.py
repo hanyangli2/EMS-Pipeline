@@ -8,7 +8,6 @@ import re
 from nltk import ngrams
 from nltk.tokenize import sent_tokenize
 import csv
-from negation_negspacy import *
 from negation_negspacy2 import *
 from negation_pycontext import *
 
@@ -154,18 +153,12 @@ class ConceptExtractor(object):
         sent_text: a list of sent text
         '''
 
-        print("sent_text")
-        print(sent_text)
-
-        print("negation")
+        # pycontextNLP setup
         tags = pycontext_findneg(sent_text[0])
-        i = 0;
-        #Searches for negated values in sent_text
-        for x in tags:
-            category = re.sub(r'[^a-zA-Z]', '', str(tags[i][1].getCategory()))
+        # Searches for negated values in sent_text
+        for i, tag in enumerate(tags):
+            category = re.sub(r'[^a-zA-Z]', '', str(tag[1].getCategory()))
             neg_dict[str(category)] = negated(tags)
-            i += 1
-        print(neg_dict)
 
         mm = MetaMap.get_instance('./public_mm/bin/metamap16', version=2016)
         self.concepts, _ = mm.extract_concepts(sent_text, word_sense_disambiguation=True,
@@ -243,10 +236,6 @@ class ConceptExtractor(object):
             self.Log.append(content)
 
     def FirstExtract(self, sent_text, tick_num):
-
-        print("First Extract Sent Text")
-        print(sent_text)
-
         for concept in self.concepts:
             negation = True
             if concept[1] == 'AA':
@@ -256,16 +245,19 @@ class ConceptExtractor(object):
                 '-')[3].strip('"').lower()
             # last part of "trigger" field, 1 means negation is detected
             # negation = False if negation is detected
+            '''
+            MetaMap Negex Negation
+            '''
             # negation = concept[6].split('-')[-1].rstrip(']') == '0'
-            print(normalized_trigger_name)
-            print("detecting negation!!!!!")
+
+            '''
+            pyContextNLP Negation
+            '''
             if neg_dict.get(normalized_trigger_name) is not None and neg_dict[normalized_trigger_name] == False:
                 negation = False
-            print("negation: ")
-            print(negation)
 
             CUI = concept[4]
-            print("Concept: " + normalized_trigger_name + " CUI: " + CUI)
+            # print("Concept: " + normalized_trigger_name + " CUI: " + CUI)
             # score = float(concept[2])
             score = float(self.scores[CUI])
             # print(concept[8])
